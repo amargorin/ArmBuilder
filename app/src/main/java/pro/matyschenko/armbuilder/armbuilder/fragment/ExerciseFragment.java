@@ -8,30 +8,29 @@ import android.view.ViewGroup;
 
 import pro.matyschenko.armbuilder.armbuilder.R;
 
+public class ExerciseFragment extends AbstractTabFragment {
 
-public class MesurementFragment extends AbstractTabFragment {
 
-    public static MesurementFragment newInstance(Context context) {
-        MesurementFragment fragment = new MesurementFragment();
+    public static ExerciseFragment newInstance(Context context) {
+        ExerciseFragment fragment = new ExerciseFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         fragment.setContext(context);
-        fragment.setTitle(context.getString(R.string.mesurement_fragment));
+        fragment.setTitle(context.getString(R.string.exercises_fragment));
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_mesurement, container, false);
+        return inflater.inflate(R.layout.fragment_exercise, container, false);
     }
-
 //    // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {
 //        if (mListener != null) {
