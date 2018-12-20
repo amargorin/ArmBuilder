@@ -5,5 +5,11 @@
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:icon="@drawable/settings_outline"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/select_device"
+        android:title="@string/select_device"
+        android:icon="@drawable/bluetooth"
+        app:showAsAction="ifRoom" />
 </menu>
