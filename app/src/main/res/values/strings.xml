@@ -14,4 +14,5 @@
     <string name="exercises_fragment">Exercises</string>
     <string name="hello_exercise_fragment">Hello E fragment</string>
     <string name="hello_mesurement_fragment">Hello M fragment</string>
+    <string name="detail_fragment">Detail Fragment</string>
 </resources>

@@ -2,6 +2,8 @@ package pro.matyschenko.armbuilder.armbuilder.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,48 +36,27 @@ public class ExerciseFragment extends AbstractTabFragment {
         view = inflater.inflate(R.layout.fragment_exercise, container, false);
         RecyclerView rv = view.findViewById(R.id.recycle_view);
         rv.setLayoutManager(new LinearLayoutManager(context));
-        rv.setAdapter(new ExerciseListAdapter(createMockExerciseListData()));
+        exerciseListAdapter = new ExerciseListAdapter(createMockExerciseListData());
+        rv.setAdapter(exerciseListAdapter);
+
+        FloatingActionButton fab = view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addExercise();
+            }
+        });
         return view;
+    }
+
+    private void addExercise() {
+        exerciseListAdapter.addElement(new ExerciseDTO("New exercise"));
+        exerciseListAdapter.notifyDataSetChanged();
     }
 
     private List<ExerciseDTO> createMockExerciseListData() {
         List<ExerciseDTO> data = new ArrayList<>();
-        data.add(new ExerciseDTO("Item1"));
-        data.add(new ExerciseDTO("Item2"));
-        data.add(new ExerciseDTO("Item3"));
-        data.add(new ExerciseDTO("Item4"));
-        data.add(new ExerciseDTO("Item5"));
-        data.add(new ExerciseDTO("Item6"));
-        data.add(new ExerciseDTO("Item7"));
+        data.add(new ExerciseDTO("New exercise"));
         return data;
     }
-//    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
-
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
-
-
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
 }
