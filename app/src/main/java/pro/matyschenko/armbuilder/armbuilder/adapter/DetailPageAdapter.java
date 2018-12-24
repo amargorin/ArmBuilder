@@ -24,6 +24,7 @@ public class DetailPageAdapter extends PagerAdapter {
         layoutInflater = LayoutInflater.from(context);
         pages.add("Page 1");
         pages.add("Page 2");
+
     }
 
     @Override

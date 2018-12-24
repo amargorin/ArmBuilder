@@ -19,5 +19,6 @@ public class DetailActivity extends AppCompatActivity {
         detailPagerAdapter = new DetailPageAdapter(this);
         viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(detailPagerAdapter);
+        viewPager.setCurrentItem(viewPager.getAdapter().getCount());
     }
 }
