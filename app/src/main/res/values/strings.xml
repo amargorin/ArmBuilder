@@ -9,7 +9,23 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="select_device">Bluetooth</string>
-
+    <string name="pref_summary_server_address">Enter server MAC address</string>
+    <string name="pref_title_server_address">SERVER MAC Address</string>
+    <string name="pref_key_server_address">SERVER_ADDRESS</string>
+    <string name="max_x_key">max_x</string>
+    <string name="max_x_title">timeline</string>
+    <string name="max_x_summary">Enter max time</string>
+    <string name="max_y_key">max_y</string>
+    <string name="max_y_title">max force</string>
+    <string name="max_y_summary">Enter max force(kg)</string>
+    <string name="menu_item_share">share_menu</string>
+    <string name="preference_name">Settings</string>
+    <string name="threshold_value_key">threshold_value</string>
+    <string name="threshold_value_title">threshold value</string>
+    <string name="threshold_value_summary">Enter threshold value</string>
+    <string name="target_value_key">target_value</string>
+    <string name="target_value_title">target value</string>
+    <string name="target_value_summary">Enter target value</string>
     <string name="mesurement_fragment">Mesurement</string>
     <string name="exercises_fragment">Exercises</string>
     <string name="hello_exercise_fragment">Hello E fragment</string>

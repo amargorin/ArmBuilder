@@ -3,9 +3,9 @@ package pro.matyschenko.armbuilder.armbuilder.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +26,7 @@ public class ExerciseFragment extends AbstractTabFragment {
         fragment.setArguments(args);
         fragment.setContext(context);
         fragment.setTitle(context.getString(R.string.exercises_fragment));
+        Log.d("index"," ExerciseFragment constructor");
         return fragment;
     }
 

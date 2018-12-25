@@ -1,9 +1,11 @@
 package pro.matyschenko.armbuilder.armbuilder.dto;
 
-public class ExerciseDTO {
+public class BluetoothDTO {
     private String title;
 
-    public ExerciseDTO(String title) {
+    private String address;
+
+    public BluetoothDTO(String title) {
         this.title = title;
     }
 
@@ -14,5 +16,13 @@ public class ExerciseDTO {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

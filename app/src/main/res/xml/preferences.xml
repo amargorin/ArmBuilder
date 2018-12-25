@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference android:key="@string/pref_key_server_address"
+        android:title="@string/pref_title_server_address"
+        android:summary="@string/pref_summary_server_address"
+        android:defaultValue="00:00:00:00:00:00"/>
+    <EditTextPreference android:key="@string/max_x_key"
+        android:title="@string/max_x_title"
+        android:summary="@string/max_x_summary"
+        android:defaultValue="300"/>
+    <EditTextPreference android:key="@string/max_y_key"
+        android:title="@string/max_y_title"
+        android:summary="@string/max_y_summary"
+        android:defaultValue="100"/>
+    <EditTextPreference android:key="@string/target_value_key"
+        android:title="@string/target_value_title"
+        android:summary="@string/target_value_summary"
+        android:defaultValue="100"/>
+    <EditTextPreference android:key="@string/threshold_value_key"
+        android:title="@string/threshold_value_title"
+        android:summary="@string/threshold_value_summary"
+        android:defaultValue="15"/>
+</PreferenceScreen>
