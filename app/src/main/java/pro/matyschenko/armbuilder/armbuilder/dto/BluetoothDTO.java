@@ -1,12 +1,22 @@
 package pro.matyschenko.armbuilder.armbuilder.dto;
 
+
 public class BluetoothDTO {
     private String title;
-
     private String address;
+    private boolean connected;
 
-    public BluetoothDTO(String title) {
+    public BluetoothDTO(String title, String address) {
         this.title = title;
+        this.address = address;
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
     }
 
     public String getTitle() {
