@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import pro.matyschenko.armbuilder.armbuilder.DB.DatabaseHandler;
 import pro.matyschenko.armbuilder.armbuilder.adapter.BluetoothListAdapter;
 
 public class AbstractBluetoothFragment extends Fragment {
@@ -11,6 +12,7 @@ public class AbstractBluetoothFragment extends Fragment {
     protected Context context;
     View view;
     BluetoothListAdapter bluetoothListAdapter;
+    DatabaseHandler db;
 
     public String getTitle() {
         return title;

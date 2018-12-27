@@ -1,14 +1,16 @@
 package pro.matyschenko.armbuilder.armbuilder.DB;
 
-public class Connection {
+public class Settings {
     int _id;
     String _name;
     String _address;
 
-    public Connection(int id, String name, String address)  {
+    public Settings(){
+    }
+
+    public Settings(String name, String address)  {
         this._name = name;
         this._address = address;
-        this._id = id;
 
     }
 

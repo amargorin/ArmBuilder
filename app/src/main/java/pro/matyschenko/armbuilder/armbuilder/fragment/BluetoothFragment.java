@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import pro.matyschenko.armbuilder.armbuilder.DB.DatabaseHandler;
+import pro.matyschenko.armbuilder.armbuilder.DB.Settings;
 import pro.matyschenko.armbuilder.armbuilder.R;
 import pro.matyschenko.armbuilder.armbuilder.adapter.BluetoothListAdapter;
 import pro.matyschenko.armbuilder.armbuilder.dto.BluetoothDTO;
@@ -33,10 +35,13 @@ public class BluetoothFragment extends AbstractBluetoothFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setContext(getActivity());
         view = inflater.inflate(R.layout.fragment_bluetooth, container, false);
         rv = view.findViewById(R.id.bluetooth_recycle_view);
         rv.setLayoutManager(new LinearLayoutManager(context));
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        Log.d("BTState", "onCreateView db created");
+        db = new DatabaseHandler(context);
         if (CheckStateBT()) {
             initBTAdapter();
         }
@@ -44,7 +49,7 @@ public class BluetoothFragment extends AbstractBluetoothFragment {
     }
 
     private void initBTAdapter() {
-        bluetoothListAdapter = new BluetoothListAdapter(getBluetoothListData());
+        bluetoothListAdapter = new BluetoothListAdapter(getBluetoothListData(), context);
         rv.setAdapter(bluetoothListAdapter);
     }
 
@@ -53,10 +58,21 @@ public class BluetoothFragment extends AbstractBluetoothFragment {
         List<BluetoothDTO> data = new ArrayList<>();
         Set<BluetoothDevice> pairedDevices; // список сопряженных устройств
         pairedDevices = bluetoothAdapter.getBondedDevices();
+        Settings settings = db.getSettings();
         for (BluetoothDevice device : pairedDevices) {
             String devicename = device.getName();
             String macAddress = device.getAddress();
-            data.add(new BluetoothDTO(devicename, macAddress));
+            Log.d("BTState", "settings = ");
+            if (settings != null) {
+                Log.d("BTState", "settings name " + settings.get_name());
+                if (macAddress.equals(settings.get_address())){
+                    data.add(new BluetoothDTO(devicename, macAddress, true));
+                    Log.d("BTState", "fined settings name " + settings.get_name());
+                }
+                else {data.add(new BluetoothDTO(devicename, macAddress, false));
+                }
+            }
+            else {data.add(new BluetoothDTO(devicename, macAddress, false));}
         }
         return data;
     }

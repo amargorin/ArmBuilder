@@ -6,9 +6,10 @@ public class BluetoothDTO {
     private String address;
     private boolean connected;
 
-    public BluetoothDTO(String title, String address) {
+    public BluetoothDTO(String title, String address, boolean connected) {
         this.title = title;
         this.address = address;
+        this.connected = connected;
     }
 
     public boolean isConnected() {

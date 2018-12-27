@@ -1,5 +1,6 @@
 package pro.matyschenko.armbuilder.armbuilder.adapter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -12,15 +13,19 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import pro.matyschenko.armbuilder.armbuilder.DB.DatabaseHandler;
+import pro.matyschenko.armbuilder.armbuilder.DB.Settings;
 import pro.matyschenko.armbuilder.armbuilder.R;
 import pro.matyschenko.armbuilder.armbuilder.dto.BluetoothDTO;
 
 public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdapter.BluetoothViewHolder> {
 
     private List<BluetoothDTO> data;
+    Context context;
 
-    public BluetoothListAdapter(List<BluetoothDTO> data) {
+    public BluetoothListAdapter(List<BluetoothDTO> data, Context context) {
         this.data = data;
+        this.context = context;
     }
 
     @NonNull
@@ -93,8 +98,14 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
             BluetoothDTO item = data.get(i);
             if (i != position) {item.setConnected(false);}
             else {item.setConnected(true);
-            //TODO: Сохранить в базе параметры последнего соединения
-            state = true;}
+                DatabaseHandler db = new DatabaseHandler(context);
+                Settings setting = new Settings();
+                setting.set_address(item.getAddress());
+                setting.set_name(item.getTitle());
+                db.setSetting(setting);
+                Log.d("BTState", "Save item " + item.getTitle());
+                }
+            state = true;
         }
         return state;
     }
