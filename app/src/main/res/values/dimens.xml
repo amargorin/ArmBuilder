@@ -5,4 +5,10 @@
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="appbar_padding_top">0dp</dimen>
+    <dimen name="upperTextSize">100</dimen>
+    <dimen name="lowerTextSize">68</dimen>
+    <dimen name="labelTextSize">90</dimen>
+    <dimen name="scroll_height">180dp</dimen>
+    <dimen name="swipe_height">180</dimen>
 </resources>

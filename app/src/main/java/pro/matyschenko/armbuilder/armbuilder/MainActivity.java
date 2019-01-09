@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity
 
         switch (item.getItemId()) {
             case R.id.action_settings:
-                startActivity(new Intent(this, PreferencesActivity.class));
+//                startActivity(new Intent(this, PreferencesActivity.class));
                 return true;
             case R.id.select_device:
                 startActivity(new Intent(this, BluetoothListActivity.class));

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">ArmBuilder</string>
-    <string name="tab_text_1">Mesurement</string>
+    <string name="tab_text_1">Measurement</string>
     <string name="tab_text_2">Exercises</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -26,11 +26,18 @@
     <string name="target_value_key">target_value</string>
     <string name="target_value_title">target value</string>
     <string name="target_value_summary">Enter target value</string>
-    <string name="mesurement_fragment">Mesurement</string>
+    <string name="measurement_fragment">Measurement</string>
     <string name="exercises_fragment">Exercises</string>
     <string name="hello_exercise_fragment">Hello E fragment</string>
-    <string name="hello_mesurement_fragment">Hello M fragment</string>
+    <string name="hello_measurement_fragment">Hello M fragment</string>
     <string name="detail_fragment">Detail Fragment</string>
     <string name="name">Name:</string>
     <string name="address">Address:</string>
+    <string name="invalid_number_of_nicks">Total nicks (%1$d) should be a multiple of major nick interval (%2$d). Scale may be distorted.</string>
+    <string name="invalid_min_max_ratio">Sum of min (%1$f) and max (%2$f) should be divisible by 2. Scale may be distorted.</string>
+    <string name="invalid_min_max">Sum of min (%1$f) and max (%2$f) should be a multiple of value per nick (%3$f). Scale may be distorted.</string>
+    <string name="scale_ok">Scale should be okay.</string>
+    <string name="per_minute">kg</string>
+    <string name="message_text">Enter exercise name</string>
+    <string name="title_activity_result">ResultActivity</string>
 </resources>

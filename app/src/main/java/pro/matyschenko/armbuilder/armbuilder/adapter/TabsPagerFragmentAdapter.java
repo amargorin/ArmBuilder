@@ -11,7 +11,7 @@ import java.util.Map;
 
 import pro.matyschenko.armbuilder.armbuilder.fragment.AbstractTabFragment;
 import pro.matyschenko.armbuilder.armbuilder.fragment.ExerciseFragment;
-import pro.matyschenko.armbuilder.armbuilder.fragment.MesurementFragment;
+import pro.matyschenko.armbuilder.armbuilder.fragment.MeasurementFragment;
 
 public class TabsPagerFragmentAdapter extends FragmentPagerAdapter {
 
@@ -43,7 +43,7 @@ public class TabsPagerFragmentAdapter extends FragmentPagerAdapter {
 
     private void initTabMaps(Context context) {
         tabs = new HashMap<>();
-        tabs.put(0,MesurementFragment.newInstance(context));
+        tabs.put(0,MeasurementFragment.newInstance(context));
         tabs.put(1,ExerciseFragment.newInstance(context));
     }
 }
