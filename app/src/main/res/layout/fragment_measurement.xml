@@ -54,6 +54,28 @@
             meter:upperTextSize="@dimen/upperTextSize"
             meter:valuePerNick="2" />
 
+        <TextView
+            android:id="@+id/editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginBottom="18dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="100%"
+            meter:layout_constraintBottom_toBottomOf="parent"
+            meter:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/battery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="16dp"
+            meter:layout_constraintBottom_toBottomOf="parent"
+            meter:layout_constraintStart_toStartOf="parent"
+            meter:srcCompat="@drawable/battery_90_bluetooth" />
+
         <Button
             android:id="@+id/button_exercise"
             android:layout_width="wrap_content"
