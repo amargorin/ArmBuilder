@@ -76,9 +76,22 @@ public class MeterListAdapter extends RecyclerView.Adapter<MeterListAdapter.Mete
 
     public void addElement(MeterDTO meterDTO){
         data.add(meterDTO);
+        notifyDataSetChanged();
     }
 
     public void deleteElement(MeterDTO meterDTO){
         data.remove(meterDTO);
+    }
+
+    public void deleteAll(){
+        data.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(){
+        for (int i = 0; i < data.size(); i++){
+            String title = data.get(i).getTitle();
+            //TODO: Добавить все измерения в базу данных
+        }
     }
 }

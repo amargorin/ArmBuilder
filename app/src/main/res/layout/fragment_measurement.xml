@@ -16,20 +16,24 @@
 
         <Button
             android:id="@+id/button_start"
-            android:layout_width="85dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="Start"
             android:theme="@style/AppTheme.Button"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:background="@drawable/transparent_bg_bordered_button"
             meter:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/button_reset"
-            android:theme="@style/AppTheme.Button"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:text="Reset"
+            android:theme="@style/AppTheme.Button"
+            style="@style/Widget.MaterialComponents.CardView"
+            android:background="@drawable/transparent_bg_bordered_button"
             meter:layout_constraintEnd_toEndOf="parent" />
 
         <pro.matyschenko.armbuilder.armbuilder.Meter
@@ -40,7 +44,7 @@
             meter:circleColor="0xFFFFFFFF"
             meter:faceColor="0xFF2196F3"
             meter:labelTextSize="@dimen/labelTextSize"
-            meter:layout_constraintEnd_toEndOf="parent"
+
             meter:layout_constraintTop_toTopOf="parent"
             meter:lowerText="@string/per_minute"
             meter:lowerTextSize="@dimen/lowerTextSize"
@@ -55,34 +59,37 @@
             meter:valuePerNick="2" />
 
         <TextView
-            android:id="@+id/editText"
+            android:id="@+id/percent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginBottom="18dp"
+            android:layout_marginBottom="35dp"
             android:ems="10"
-            android:inputType="textPersonName"
             android:text="100%"
+            android:textColor="@android:color/white"
             meter:layout_constraintBottom_toBottomOf="parent"
-            meter:layout_constraintStart_toStartOf="parent" />
+            meter:layout_constraintEnd_toEndOf="@+id/button_save"
+            meter:layout_constraintStart_toEndOf="@+id/battery" />
 
         <ImageView
             android:id="@+id/battery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="32dp"
             meter:layout_constraintBottom_toBottomOf="parent"
+            meter:layout_constraintEnd_toEndOf="parent"
             meter:layout_constraintStart_toStartOf="parent"
-            meter:srcCompat="@drawable/battery_90_bluetooth" />
+            meter:srcCompat="@drawable/battery_bluetooth" />
 
         <Button
-            android:id="@+id/button_exercise"
+            android:id="@+id/button_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:text="SAVE"
             android:theme="@style/AppTheme.Button"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:background="@drawable/transparent_bg_bordered_button"
             meter:layout_constraintBottom_toBottomOf="parent"
             meter:layout_constraintEnd_toEndOf="parent" />
 
@@ -91,11 +98,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="32dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
             android:textColor="@android:color/white"
             android:textSize="14pt"
             meter:layout_constraintBottom_toBottomOf="parent"
-            meter:layout_constraintEnd_toEndOf="@+id/button_exercise"
             meter:layout_constraintStart_toStartOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
@@ -227,6 +234,7 @@
                 android:id="@+id/recycle_measure"
                 android:layout_weight="2"
                 android:layout_width="0dp"
+
                 android:layout_height="match_parent">
 
             </android.support.v7.widget.RecyclerView>

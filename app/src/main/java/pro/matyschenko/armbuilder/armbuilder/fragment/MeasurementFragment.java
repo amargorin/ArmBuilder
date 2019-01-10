@@ -8,12 +8,18 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Chronometer;
+import android.widget.GridLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,13 +38,37 @@ import pro.matyschenko.armbuilder.armbuilder.dto.MeterDTO;
 
 public class MeasurementFragment extends AbstractTabFragment {
     Meter meter;
-    long zero_value = 8416300; // Калибровочный коэффициент
-    long input_value = 0;
     MeterListAdapter meterListAdapter;
+
+    public static float coefficient = 21500; // Калибровочный коэффициент
+    long zero_value = 8416300; // Значение 0
+    long global_value = 0;
+    long input_value = 0;
+    double add_value = 0; //тоннаж
+    long add_counter = 0; // счетчик подходов
+    long elapsedMillis = 0;
+    double avg = 0; // среднее арифметическое
+    double max = 0;         // Максимальное значение всех измерений
+    double local_max = 0;         // Максимальное значение текущего измерения
+    public static int threshold_value = 4;  // Пороговое значение (в кг) для детекции начала и конца повторения
+    boolean state = false;  // Флаг проведения текущего измерения.
+
+    TextView total_value;
+    TextView counter_value;
+    TextView avg_value;
+    TextView max_value;
+    TextView percent;
+    GridLayout gridLayout;
+    ImageView battery;
+
+    private Button save_button;
+    private Button reset_button;
+    private Button start_button;
+
     final int RECEIVE_MEASURE = 1;
     final int RECEIVE_BATTERY = 2;
     final static String TAG = "MEASURE";
-    //private BluetoothSocket btSocket = null;
+    private Chronometer mChronometer;
     private ConnectedThread mConnectedThread;
     private ConnectThread mConnectThread;
     //SPP UUID
@@ -68,10 +98,9 @@ public class MeasurementFragment extends AbstractTabFragment {
         meter = (Meter) v.findViewById(R.id.meter);
         meter.setOnClickListener(new View.OnClickListener() {
                                      @Override
-                                     public void onClick(View v) {
+                                     public void onClick(View v) { // Calibrate
                                          zero_value = input_value;
                                          meter.moveToValue(0);
-
                                      }
                                  }
         );
@@ -79,6 +108,51 @@ public class MeasurementFragment extends AbstractTabFragment {
         rv.setLayoutManager(new LinearLayoutManager(context));
         meterListAdapter = new MeterListAdapter(createMockMeterListData());
         rv.setAdapter(meterListAdapter);
+        mChronometer = v.findViewById(R.id.chronometer);
+        mChronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+            @Override
+            public void onChronometerTick(Chronometer chronometer) {
+                elapsedMillis = SystemClock.elapsedRealtime()
+                        - mChronometer.getBase();
+            }
+        });
+        reset_button = v.findViewById(R.id.button_reset);
+        reset_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                if (!state) reset_Measurement();
+            }
+        });
+        start_button = v.findViewById(R.id.button_start);
+        start_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                if (state){
+                    stop_Measurement();
+                    meterListAdapter.addElement(new MeterDTO(Double.toString(local_max))); //TODO: временно для проверки, удалить
+                }
+                else {start_Measurement();}
+                reset_button.setEnabled(!state);
+            }
+        });
+        save_button = v.findViewById(R.id.button_save);
+        save_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                meterListAdapter.deleteAll();
+            }
+        });
+        total_value = v.findViewById(R.id.total_value);
+        counter_value = v.findViewById(R.id.count_value);
+        avg_value =  v.findViewById(R.id.avg_value);
+        max_value = v.findViewById(R.id.max_value);
+
+        gridLayout = v.findViewById(R.id.grid_layout);
+        battery = v.findViewById(R.id.battery);
+        percent = v.findViewById(R.id.percent);
 
         return v;
     }
@@ -101,21 +175,73 @@ public class MeasurementFragment extends AbstractTabFragment {
         super.onPause();
 
         Log.d(TAG, "...In onPause()...");
-        mConnectedThread.cancel();
+        if (mConnectedThread != null) mConnectedThread.cancel();
     }
 
     @SuppressLint("HandlerLeak")
     private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            int i = Integer.parseInt((String)msg.obj);
             switch (msg.what) {
                 case RECEIVE_MEASURE:
                     Log.d(TAG, "RECEIVE_MEASURE: ");
+                    try {
+                        float f = (i - zero_value) / coefficient;
+                        meter.moveToValue(f);
+                        meter.setUpperText(String.format("%.2f", f));
+                        if (f > max) max = f;
+                        if (f > local_max) local_max = f;
+                        if (f > threshold_value) {
+                            mChronometer.start();
+                        } else {
+                            mChronometer.stop();
+                            meterListAdapter.addElement(new MeterDTO(Double.toString(local_max)));
+                            local_max = 0.0;
+                        }
+                    } catch (NumberFormatException e) {
+                        Log.d(TAG, "NumberFormatException error : " + (String)msg.obj);
+                    }
                     break;
                 case RECEIVE_BATTERY:
                     Log.d(TAG, "RECEIVE_BATTERY");
-                    break;
-
+                    percent.setText((String)msg.obj + "%");
+                    int j = i / 10;
+                    switch (j) {
+                        case 10:
+                            battery.setImageResource(R.drawable.battery_bluetooth);
+                            break;
+                        case 9:
+                            battery.setImageResource(R.drawable.battery_90_bluetooth);
+                            break;
+                        case 8:
+                            battery.setImageResource(R.drawable.battery_80_bluetooth);
+                            break;
+                        case 7:
+                            battery.setImageResource(R.drawable.battery_70_bluetooth);
+                            break;
+                        case 6:
+                            battery.setImageResource(R.drawable.battery_60_bluetooth);
+                            break;
+                        case 5:
+                            battery.setImageResource(R.drawable.battery_50_bluetooth);
+                            break;
+                        case 4:
+                            battery.setImageResource(R.drawable.battery_40_bluetooth);
+                            break;
+                        case 3:
+                            battery.setImageResource(R.drawable.battery_30_bluetooth);
+                            break;
+                        case 2:
+                            battery.setImageResource(R.drawable.battery_20_bluetooth);
+                            break;
+                        case 1:
+                            battery.setImageResource(R.drawable.battery_10_bluetooth);
+                            break;
+                        default:
+                            battery.setImageResource(R.drawable.battery_10_bluetooth);
+                            break;
+                    }
             }
         }
     };
@@ -129,6 +255,37 @@ public class MeasurementFragment extends AbstractTabFragment {
         } catch (Exception e) {return "";}
         Log.d(TAG, "...getDeviceAddress(): address is " + address);
         return address;
+    }
+
+    private void reset_Measurement() {
+        add_value = 0;
+        add_counter = 0;
+        avg = 0;
+        max = 0;
+        total_value.setText(String.format("%1$.1f", add_value));
+        avg_value.setText(String.format("%1$.1f", avg));
+        counter_value.setText(String.format("%d", add_counter));
+        max_value.setText(String.format("%1$.1f", max));
+        meter.setUpperText(String.format ("%.2f", max));
+        mChronometer.setBase(SystemClock.elapsedRealtime());
+        elapsedMillis = 0;
+    }
+
+    private void start_Measurement() {
+        state = true;
+        start_button.setText("Stop");
+        save_button.setEnabled(false);
+        max_value.setText(String.format("%1$.1f", 0.0));
+        meter.setUpperText(String.format ("%.2f", 0.0));
+        mChronometer.setBase(SystemClock.elapsedRealtime());
+    }
+
+    private void stop_Measurement() {
+        state = false;
+        start_button.setText("Start");
+        max_value.setText(String.format("%1$.1f", max));
+        meter.setUpperText(String.format ("%.2f", max));
+        save_button.setEnabled(true);
     }
 
     private class ConnectThread extends Thread {
@@ -203,7 +360,7 @@ public class MeasurementFragment extends AbstractTabFragment {
             byte[] buffer = new byte[256];  // buffer store for the stream
             StringBuilder sb = new StringBuilder();
             int bytes; // bytes returned from read()
-            int type_of_message = 1; //message types (1) M123.01 - измерение, (2) B0.91 процент зарядки батареи
+            int type_of_message = 1; //message types (1) M80000000 - измерение, (2) B99 процент зарядки батареи
             while (true) {
                 try {
                     bytes = mmInStream.read(buffer);        // Получаем кол-во байт и само собщение в байтовый массив "buffer"
@@ -246,11 +403,6 @@ public class MeasurementFragment extends AbstractTabFragment {
     private List<MeterDTO> createMockMeterListData() {
         List<MeterDTO> data = new ArrayList<>();
         data.add(new MeterDTO("11.00"));
-        data.add(new MeterDTO("12.00"));
-        data.add(new MeterDTO("13.00"));
-        data.add(new MeterDTO("14.00"));
-        data.add(new MeterDTO("15.00"));
-
         return data;
     }
 }

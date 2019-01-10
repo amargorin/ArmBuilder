@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cardView"
+        android:theme="@style/AppTheme.CardView"
         android:foreground="?android:attr/selectableItemBackground"
         card:cardElevation="2dp"
         card:cardUseCompatPadding="true">
