@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="Start"
+            android:text="Reset"
             android:theme="@style/AppTheme.Button"
             style="@style/Widget.AppCompat.Button.Colored"
             android:background="@drawable/transparent_bg_bordered_button"
@@ -27,8 +27,8 @@
 
         <Button
             android:id="@+id/button_reset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginEnd="8dp"
             android:text="Reset"
             android:theme="@style/AppTheme.Button"
@@ -90,7 +90,6 @@
             android:theme="@style/AppTheme.Button"
             style="@style/Widget.AppCompat.Button.Colored"
             android:background="@drawable/transparent_bg_bordered_button"
-            meter:layout_constraintBottom_toBottomOf="parent"
             meter:layout_constraintEnd_toEndOf="parent" />
 
         <Chronometer

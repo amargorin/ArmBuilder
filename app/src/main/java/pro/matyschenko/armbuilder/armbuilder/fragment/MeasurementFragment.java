@@ -40,6 +40,7 @@ public class MeasurementFragment extends AbstractTabFragment {
     Meter meter;
     MeterListAdapter meterListAdapter;
 
+
     public static float coefficient = 21500; // Калибровочный коэффициент
     long zero_value = 8416300; // Значение 0
     long global_value = 0;
@@ -52,6 +53,7 @@ public class MeasurementFragment extends AbstractTabFragment {
     double local_max = 0;         // Максимальное значение текущего измерения
     public static int threshold_value = 4;  // Пороговое значение (в кг) для детекции начала и конца повторения
     boolean state = false;  // Флаг проведения текущего измерения.
+    private boolean add_to_save; // флаг для необходимости добавления макс. значения в список измерений.
 
     TextView total_value;
     TextView counter_value;
@@ -60,6 +62,7 @@ public class MeasurementFragment extends AbstractTabFragment {
     TextView percent;
     GridLayout gridLayout;
     ImageView battery;
+    RecyclerView rv;
 
     private Button save_button;
     private Button reset_button;
@@ -71,6 +74,7 @@ public class MeasurementFragment extends AbstractTabFragment {
     private Chronometer mChronometer;
     private ConnectedThread mConnectedThread;
     private ConnectThread mConnectThread;
+
     //SPP UUID
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     BluetoothAdapter btAdapter = null;
@@ -104,7 +108,7 @@ public class MeasurementFragment extends AbstractTabFragment {
                                      }
                                  }
         );
-        RecyclerView rv = v.findViewById(R.id.recycle_measure);
+        rv = v.findViewById(R.id.recycle_measure);
         rv.setLayoutManager(new LinearLayoutManager(context));
         meterListAdapter = new MeterListAdapter(createMockMeterListData());
         rv.setAdapter(meterListAdapter);
@@ -132,6 +136,7 @@ public class MeasurementFragment extends AbstractTabFragment {
                 if (state){
                     stop_Measurement();
                     meterListAdapter.addElement(new MeterDTO(Double.toString(local_max))); //TODO: временно для проверки, удалить
+                    //
                 }
                 else {start_Measurement();}
                 reset_button.setEnabled(!state);
@@ -185,7 +190,8 @@ public class MeasurementFragment extends AbstractTabFragment {
             int i = Integer.parseInt((String)msg.obj);
             switch (msg.what) {
                 case RECEIVE_MEASURE:
-                    Log.d(TAG, "RECEIVE_MEASURE: ");
+                    Log.d(TAG, "RECEIVE_MEASURE: " + (String)msg.obj);
+                    input_value = i; // input_value изпользуется для калибровки
                     try {
                         float f = (i - zero_value) / coefficient;
                         meter.moveToValue(f);
@@ -193,10 +199,23 @@ public class MeasurementFragment extends AbstractTabFragment {
                         if (f > max) max = f;
                         if (f > local_max) local_max = f;
                         if (f > threshold_value) {
-                            mChronometer.start();
+                            if (!add_to_save) {
+                                mChronometer.setBase(SystemClock.elapsedRealtime());
+                                mChronometer.start();
+                                add_to_save = true;
+                                add_counter++;
+                                add_value += local_max;
+                                avg = add_value / add_counter;
+                            }
+                            set_Measurement();
                         } else {
-                            mChronometer.stop();
-                            meterListAdapter.addElement(new MeterDTO(Double.toString(local_max)));
+                            if (add_to_save) {
+                                meterListAdapter.addElement(new MeterDTO(String.format("%.2f",local_max)));
+                                rv.scrollToPosition(meterListAdapter.getItemCount() -1);
+                                mChronometer.stop();
+                                stop_Measurement();
+                                add_to_save = false;
+                            }
                             local_max = 0.0;
                         }
                     } catch (NumberFormatException e) {
@@ -262,30 +281,43 @@ public class MeasurementFragment extends AbstractTabFragment {
         add_counter = 0;
         avg = 0;
         max = 0;
-        total_value.setText(String.format("%1$.1f", add_value));
-        avg_value.setText(String.format("%1$.1f", avg));
-        counter_value.setText(String.format("%d", add_counter));
-        max_value.setText(String.format("%1$.1f", max));
-        meter.setUpperText(String.format ("%.2f", max));
-        mChronometer.setBase(SystemClock.elapsedRealtime());
+//        total_value.setText(String.format("%1$.1f", add_value));
+//        avg_value.setText(String.format("%1$.1f", avg));
+//        counter_value.setText(String.format("%d", add_counter));
+//        max_value.setText(String.format("%1$.1f", max));
+//        meter.setUpperText(String.format ("%.2f", max));
+//        mChronometer.setBase(SystemClock.elapsedRealtime());
         elapsedMillis = 0;
     }
 
     private void start_Measurement() {
-        state = true;
-        start_button.setText("Stop");
-        save_button.setEnabled(false);
-        max_value.setText(String.format("%1$.1f", 0.0));
-        meter.setUpperText(String.format ("%.2f", 0.0));
-        mChronometer.setBase(SystemClock.elapsedRealtime());
+        //state = true;
+        //start_button.setText("Stop");
+        //save_button.setEnabled(false);
+        //max_value.setText(String.format("%1$.1f", 0.0));
+        //meter.setUpperText(String.format ("%.2f", 0.0));
+        //mChronometer.setBase(SystemClock.elapsedRealtime());
     }
 
     private void stop_Measurement() {
-        state = false;
-        start_button.setText("Start");
+        total_value.setText(String.format("%1$.1f", add_value));
+        avg_value.setText(String.format("%1$.1f", avg));
+        counter_value.setText(String.format("%d", add_counter));
         max_value.setText(String.format("%1$.1f", max));
-        meter.setUpperText(String.format ("%.2f", max));
-        save_button.setEnabled(true);
+        //mChronometer.setBase(SystemClock.elapsedRealtime());
+        elapsedMillis = 0;
+        add_value = 0;
+        add_counter = 0;
+        avg = 0;
+        max = 0;
+    }
+
+    private void set_Measurement() {
+        total_value.setText(String.format("%1$.1f", add_value));
+        avg_value.setText(String.format("%1$.1f", avg));
+        counter_value.setText(String.format("%d", add_counter));
+        max_value.setText(String.format("%1$.1f", max));
+        //meter.setUpperText(String.format ("%.2f", max));
     }
 
     private class ConnectThread extends Thread {
@@ -402,7 +434,6 @@ public class MeasurementFragment extends AbstractTabFragment {
 
     private List<MeterDTO> createMockMeterListData() {
         List<MeterDTO> data = new ArrayList<>();
-        data.add(new MeterDTO("11.00"));
         return data;
     }
 }
