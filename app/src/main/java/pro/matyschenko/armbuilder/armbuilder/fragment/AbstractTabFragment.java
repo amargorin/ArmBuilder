@@ -11,7 +11,7 @@ public class AbstractTabFragment extends Fragment {
     protected  String title;
     protected Context context;
     protected View view;
-    ExerciseListAdapter exerciseListAdapter;
+    public ExerciseListAdapter exerciseListAdapter;
 
     public String getTitle() {
         return title;

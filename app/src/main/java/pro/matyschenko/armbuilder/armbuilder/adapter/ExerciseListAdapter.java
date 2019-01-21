@@ -17,18 +17,25 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import pro.matyschenko.armbuilder.armbuilder.DB.DatabaseHandler;
+import pro.matyschenko.armbuilder.armbuilder.DB.ExerciseGroup;
 import pro.matyschenko.armbuilder.armbuilder.DetailActivity;
 import pro.matyschenko.armbuilder.armbuilder.R;
-import pro.matyschenko.armbuilder.armbuilder.dto.ExerciseDTO;
 
 public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapter.ExerciseViewHolder> {
 
-    private List<ExerciseDTO> data;
+    private List<ExerciseGroup> data;
+    Context mContext;
+    DatabaseHandler databaseHandler;
 
-    public ExerciseListAdapter(List<ExerciseDTO> data) {
+    public ExerciseListAdapter(Context context) {
         Log.d("index"," ExerciseListAdapter constructor");
-        this.data = data;
+        mContext = context;
+        databaseHandler = new DatabaseHandler(context);
+        this.data =  databaseHandler.getAllExerciseGroups();
     }
+
+
 
     @NonNull
     @Override
@@ -40,10 +47,16 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ExerciseViewHolder exerciseViewHolder, int i) {
-        ExerciseDTO item = data.get(i);
+        ExerciseGroup item = data.get(i);
         Log.d("index"," ExerciseListAdapter onBindViewHolder() item.getTitle()=" + item.getTitle() + " " + Integer.toString(i));
         exerciseViewHolder.position = i;
         exerciseViewHolder.title.setText(item.getTitle());
+        Log.d("DatabaseHandler"," ExerciseListAdapter onBindViewHolder() current = " + Integer.toString(item.is_current()));
+        if(item.is_current() == 1){
+            exerciseViewHolder.selectButton.setImageResource(R.drawable.radiobox_marked);
+        } else {
+            exerciseViewHolder.selectButton.setImageResource(R.drawable.radiobox_blank);
+        }
     }
 
     @Override
@@ -56,7 +69,7 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
 
         CardView cardView;
         TextView title;
-        ImageButton editButton, deleteButton;
+        ImageButton editButton, deleteButton, selectButton;
         int position;
 
         public ExerciseViewHolder(@NonNull View itemView) {
@@ -66,7 +79,11 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    ExerciseGroup exerciseGroup = getGroupElement(position);
                     Intent intent = new Intent(view.getContext(), DetailActivity.class);
+                    Log.d("DatabaseHandler","position = " + String.valueOf(position)+" ID = " + String.valueOf(exerciseGroup.getID()));
+                    intent.putExtra("exercise_group_id", exerciseGroup.getID());
                     view.getContext().startActivity(intent);
                 }
             });
@@ -83,10 +100,13 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
                             .setCancelable(false)
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialogBox, int id) {
-                                    ExerciseDTO item = data.get(position);
+                                    ExerciseGroup item = data.get(position);
                                     Log.d("index","Dialog onClick OK");
-                                    item.setTitle(userInputDialogEditText.getText().toString());
+                                    String title = userInputDialogEditText.getText().toString();
+                                    item.setTitle(title);
                                     notifyDataSetChanged();
+                                    int updated = databaseHandler.updateExerciseGroup(item);
+                                    Log.d("DatabaseHandler", "Updated Exercise - " + Integer.toString(updated));
                                 }
                             })
 
@@ -114,7 +134,7 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
                             .setCancelable(false)
                             .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialogBox, int id) {
-                                   deleteElement(data.get(position));
+                                    deleteGroupElement(data.get(position));
                                     notifyDataSetChanged();
                                 }
                             })
@@ -130,17 +150,42 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
                     alertDialogAndroid.show();
                 }
             });
-
+            selectButton = itemView.findViewById(R.id.radiobox_button);
+            selectButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setCurrentGroupElement(data.get(position));
+                    notifyDataSetChanged();
+                }
+            });
             title = itemView.findViewById(R.id.title);
         }
 
     }
 
-    public void addElement(ExerciseDTO exerciseDTO){
-        data.add(exerciseDTO);
+    public void addGroupElement(ExerciseGroup exerciseGroup){
+        DatabaseHandler databaseHandler = new DatabaseHandler(mContext);
+        exerciseGroup.setID(databaseHandler.addExerciseGroup(exerciseGroup));
+        data.add(exerciseGroup);
+
     }
 
-    public void deleteElement(ExerciseDTO exerciseDTO){
-        data.remove(exerciseDTO);
+    public void deleteGroupElement(ExerciseGroup exerciseGroup){
+        DatabaseHandler databaseHandler = new DatabaseHandler(mContext);
+        databaseHandler.deleteExerciseGroup(exerciseGroup);
+        data.remove(exerciseGroup);
+    }
+
+    public ExerciseGroup getGroupElement(int index){
+        return data.get(index);
+    }
+
+    public void  setCurrentGroupElement(ExerciseGroup exerciseGroup){
+        for (int i=0; i<data.size();i++){
+            ExerciseGroup eg = data.get(i);
+            eg.set_current(0);
+        }
+        exerciseGroup.set_current(1);
+        databaseHandler.setCurrentExerciseGroup(exerciseGroup);
     }
 }

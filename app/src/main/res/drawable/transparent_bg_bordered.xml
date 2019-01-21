@@ -3,7 +3,7 @@
     <item android:state_enabled="true">
         <shape android:shape="rectangle">
             <!-- background -->
-            <solid android:color="@color/colorPrimary" />
+            <solid android:color="@color/colorPrimaryDark" />
             <!-- border -->
             <stroke android:width="2dp" android:color="@color/colorAccent" />
 
@@ -14,9 +14,20 @@
     <item android:state_enabled="false">
         <shape android:shape="rectangle">
             <!-- background -->
+            <solid android:color="@color/colorPrimaryDark" />
+            <!-- border -->
+            <stroke android:width="2dp" android:color="@color/colorPrimary" />
+
+            <!-- corner roundness -->
+            <corners android:radius="5dp" />
+        </shape>
+    </item>
+    <item android:state_active="false">
+        <shape android:shape="rectangle">
+            <!-- background -->
             <solid android:color="@color/colorPrimary" />
             <!-- border -->
-            <stroke android:width="2dp" android:color="@color/colorPrimaryDark" />
+            <stroke android:width="2dp" android:color="@color/colorPrimaryLight" />
 
             <!-- corner roundness -->
             <corners android:radius="5dp" />

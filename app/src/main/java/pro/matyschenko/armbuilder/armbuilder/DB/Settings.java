@@ -2,15 +2,18 @@ package pro.matyschenko.armbuilder.armbuilder.DB;
 
 public class Settings {
     int _id;
+    int _threshold;
     String _name;
     String _address;
 
     public Settings(){
     }
 
-    public Settings(String name, String address)  {
+    public Settings(String name, String address, int threshold)  {
         this._name = name;
         this._address = address;
+        this._threshold = threshold;
+
 
     }
 
@@ -36,5 +39,13 @@ public class Settings {
 
     public void set_address(String _address) {
         this._address = _address;
+    }
+
+    public int get_threshold() {
+        return _threshold;
+    }
+
+    public void set_threshold(int _threshold) {
+        this._threshold = _threshold;
     }
 }

@@ -10,15 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import pro.matyschenko.armbuilder.armbuilder.DB.Exercise;
+import pro.matyschenko.armbuilder.armbuilder.DB.ExerciseGroup;
 import pro.matyschenko.armbuilder.armbuilder.R;
 import pro.matyschenko.armbuilder.armbuilder.adapter.ExerciseListAdapter;
-import pro.matyschenko.armbuilder.armbuilder.dto.ExerciseDTO;
 
 public class ExerciseFragment extends AbstractTabFragment {
 
+    //public OnFragmentInteractionListener mListener;
 
     public static ExerciseFragment newInstance(Context context) {
         ExerciseFragment fragment = new ExerciseFragment();
@@ -30,6 +29,21 @@ public class ExerciseFragment extends AbstractTabFragment {
         return fragment;
     }
 
+//    public interface OnFragmentInteractionListener {
+//        void onFragmentInteraction(String name);
+//    }
+//
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        try {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } catch (ClassCastException e) {
+//            throw new ClassCastException(context.toString()
+//                    + " должен реализовывать интерфейс OnFragmentInteractionListener");
+//        }
+//    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -37,7 +51,7 @@ public class ExerciseFragment extends AbstractTabFragment {
         view = inflater.inflate(R.layout.fragment_exercise, container, false);
         RecyclerView rv = view.findViewById(R.id.recycle_view);
         rv.setLayoutManager(new LinearLayoutManager(context));
-        exerciseListAdapter = new ExerciseListAdapter(createMockExerciseListData());
+        exerciseListAdapter = new ExerciseListAdapter(context);
         rv.setAdapter(exerciseListAdapter);
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
@@ -51,13 +65,12 @@ public class ExerciseFragment extends AbstractTabFragment {
     }
 
     private void addExercise() {
-        exerciseListAdapter.addElement(new ExerciseDTO("New exercise"));
+        exerciseListAdapter.addGroupElement(new ExerciseGroup());
         exerciseListAdapter.notifyDataSetChanged();
     }
 
-    private List<ExerciseDTO> createMockExerciseListData() {
-        List<ExerciseDTO> data = new ArrayList<>();
-        data.add(new ExerciseDTO("New exercise"));
-        return data;
-    }
+//    public void updateName(String name){
+//        mListener.onFragmentInteraction(name);
+//    }
+
 }

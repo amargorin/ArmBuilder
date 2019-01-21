@@ -23,6 +23,7 @@
 
     <style name="AppTheme.CardView" parent="Widget.MaterialComponents.CardView">
         <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 
 </resources>

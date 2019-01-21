@@ -1,44 +1,44 @@
 package pro.matyschenko.armbuilder.armbuilder.DB;
 
 public class Exercise {
-    int _id;
-    String _name;
+    long _id;
+    long _group_id;
     String _value_array;
     double _add_value;
     double _avg_value ;
     double _max;
     long _add_counter;
     long _elapsedMillis;
+    String _date;
 
     public Exercise(){
     }
 
-    public Exercise(int id, String name, String value_array, double add_value, double avg_value, double max, long add_counter, long elapsedMillis){
-        this._name = name;
+    public Exercise(long group_id, String value_array, double add_value, double avg_value, double max, long add_counter, long elapsedMillis, String date){
         this._value_array = value_array;
-        this._id = id;
+        this._group_id = group_id;
         this._max = max;
         this._add_value = add_value;
         this._avg_value = avg_value;
         this._add_counter = add_counter;
         this._elapsedMillis = elapsedMillis;
-
+        this._date = date;
     }
 
-    public int getID(){
+    public long getID(){
         return this._id;
     }
 
-    public void setID(int id){
+    public void setID(long id){
         this._id = id;
     }
 
-    public String getName(){
-        return this._name;
+    public long get_group_id() {
+        return _group_id;
     }
 
-    public void setName(String name){
-        this._name = name;
+    public void set_group_id(long _group_id) {
+        this._group_id = _group_id;
     }
 
     public String getValue(){
@@ -83,5 +83,17 @@ public class Exercise {
 
     public long get_elapsedMillis(){
         return this._elapsedMillis;
+    }
+
+    public void set_elapsedMillis(long elapsedMillis){
+        this._elapsedMillis = elapsedMillis;
+    }
+
+    public String get_date() {
+        return _date;
+    }
+
+    public void set_date(String _date) {
+        this._date = _date;
     }
 }
