@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="16dp"
-            android:src="@drawable/threshold"
+            android:src="@drawable/threshold2"
             meter:layout_constraintBottom_toBottomOf="parent"
             meter:layout_constraintStart_toStartOf="parent" />
 
@@ -71,7 +71,7 @@
             android:id="@+id/threshold_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="20dp"
             android:layout_marginBottom="8dp"
             android:text="TextView"
             android:textColor="@android:color/white"
