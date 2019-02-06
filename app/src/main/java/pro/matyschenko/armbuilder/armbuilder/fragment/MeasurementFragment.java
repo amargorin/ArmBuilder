@@ -57,7 +57,7 @@ public class MeasurementFragment extends AbstractTabFragment {
     double avg = 0; // среднее арифметическое
     double max = 0;         // Максимальное значение всех измерений
     double local_max = 0;         // Максимальное значение текущего измерения
-    public int threshold_value = 4;  // Пороговое значение (в кг) для детекции начала и конца повторения
+    public int threshold_value = 10;  // Пороговое значение (в кг) для детекции начала и конца повторения
     boolean state = false;  // Флаг проведения текущего измерения.
     private boolean add_to_save; // флаг для необходимости добавления макс. значения в список измерений.
 
@@ -366,7 +366,8 @@ public class MeasurementFragment extends AbstractTabFragment {
             // Cancel discovery because it will slow down the connection
             btAdapter.cancelDiscovery();
             Log.d(TAG, "...ConnectThread(): Run");
-            //while(true) {
+            if (mmSocket != null)
+            {
                 try {
                     // Connect the device through the socket. This will block
                     // until it succeeds or throws an exception
@@ -387,7 +388,7 @@ public class MeasurementFragment extends AbstractTabFragment {
                     }
                     return;
                 }
-            //}
+            }
             // Do work to manage the connection (in a separate thread)
 //            mConnectedThread = new ConnectedThread(mmSocket);
 //            Log.d(TAG, "...ConnectedThread.start()");
